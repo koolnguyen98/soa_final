@@ -202,11 +202,9 @@ public class ShoppingController {
 			UserDetailsImp loginedUser = (UserDetailsImp) ((Authentication) principal).getPrincipal();
 			userInfo = loginedUser.getUsername();
 
-//			List<Role> roles = loginedUser.getUser().getRoles();
-//			
-//			for (Role role : roles) {
-//				admin = role.getRole().equals("ADMIN") ? true : false;
-//			}
+			Role role = loginedUser.getRole();
+		
+			admin = role.getRole().equals("ADMIN") ? true : false;
 
 			shoppingCarts = nonScurityService.findAllShoppingCartByUser(userInfo);
 		}

@@ -58,6 +58,6 @@ public class UserDetailsServiceImp implements UserDetailsService {
 					throw new UsernameNotFoundException("User not found with id : " + id);
 				}
 				
-				return new UserDetailsImp(account.get());
+				return new UserDetailsImp(account.get(), account.get().getRoles().get(0));
 	}
 }
