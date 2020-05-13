@@ -17,11 +17,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.soa.api.Urls;
+import com.soa.api.authentication.UserDetailsImp;
 import com.soa.api.controller.request.LoginRequest;
 import com.soa.api.controller.response.ApiResponse;
 import com.soa.api.controller.response.ShopResponse;
+import com.soa.api.entity.Account;
 import com.soa.api.entity.FurnitureType;
 import com.soa.api.entity.Product;
+import com.soa.api.entity.Role;
 import com.soa.api.entity.ShoppingCart;
 import com.soa.api.service.AuthenticationService;
 import com.soa.api.service.NonScurityService;
@@ -196,10 +199,14 @@ public class ShoppingController {
 		List<ShoppingCart> shoppingCarts = null;
 		boolean admin = false;
 		if (principal != null) {
-			User loginedUser = (User) ((Authentication) principal).getPrincipal();
+			UserDetailsImp loginedUser = (UserDetailsImp) ((Authentication) principal).getPrincipal();
 			userInfo = loginedUser.getUsername();
 
-			admin = loginedUser.getAuthorities().stream().anyMatch(r -> r.getAuthority().equals("ADMIN"));
+//			List<Role> roles = loginedUser.getUser().getRoles();
+//			
+//			for (Role role : roles) {
+//				admin = role.getRole().equals("ADMIN") ? true : false;
+//			}
 
 			shoppingCarts = nonScurityService.findAllShoppingCartByUser(userInfo);
 		}
