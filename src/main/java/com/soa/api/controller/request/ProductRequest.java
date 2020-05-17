@@ -40,7 +40,7 @@ public class ProductRequest {
 	
 	private List<FurnitureType> listFurnitureTypes;
 
-	private MultipartFile[] imageFiles;
+	private List<String> imageFiles;
 
 	private List<String> base64Images;
 
@@ -124,11 +124,11 @@ public class ProductRequest {
 		this.productType = productType;
 	}
 
-	public MultipartFile[] getImageFiles() {
+	public List<String> getImageFiles() {
 		return imageFiles;
 	}
 
-	public void setImageFiles(MultipartFile[] imageFiles) {
+	public void setImageFiles(List<String> imageFiles) {
 		this.imageFiles = imageFiles;
 	}
 

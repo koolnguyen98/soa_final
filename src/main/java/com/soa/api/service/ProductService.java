@@ -270,17 +270,14 @@ public class ProductService {
 		return new ResponseEntity<Object>(apiResponse, HttpStatus.NOT_FOUND);
 	}
 
-	private List<Image> getByteListImage(MultipartFile[] imageFiles, Product result) {
+	private List<Image> getByteListImage(List<String> imageFiles, Product result) {
 		List<Image> images = new ArrayList<Image>();
 
-		if (imageFiles != null && imageFiles.length > 0) {
-			for (MultipartFile imageFile : imageFiles) {
+		if (imageFiles != null && imageFiles.size() > 0) {
+			for (String imageFile : imageFiles) {
 				Image image = new Image();
-				try {
-					image.setImage(imageFile.getBytes());
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+				image.setImage(imageFile);
+
 				image.setProduct(result);
 				images.add(image);
 			}
@@ -293,7 +290,7 @@ public class ProductService {
 	private List<String> CoverBase64(List<Image> images) {
 		List<String> base64Images = new ArrayList<String>();
 		for (Image image : images) {
-			String base64Encoded = Base64.getEncoder().encodeToString(image.getImage());
+			String base64Encoded = image.getImage();
 			base64Images.add(base64Encoded);
 		}
 		return base64Images;
@@ -547,7 +544,7 @@ public class ProductService {
 					productTypeRepository.delete(productType);
 					apiResponse.setSuccess(true);
 
-					apiResponse.setMessage("Update Successfully");
+					apiResponse.setMessage("Delete Successfully");
 
 					apiResponse.setObject(null);
 
@@ -564,7 +561,7 @@ public class ProductService {
 					furnitureTypeRepository.delete(furnitureType);
 					apiResponse.setSuccess(true);
 
-					apiResponse.setMessage("Update Successfully");
+					apiResponse.setMessage("Delete Successfully");
 
 					apiResponse.setObject(null);
 

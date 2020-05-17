@@ -20,7 +20,7 @@ public class Image {
 	
 	@NotNull
 	@Column(name = "image", nullable = false)
-	private byte[] image;
+	private String image;
 	
 	@ManyToOne()
     @JoinColumn(name="product_id", nullable = false) 
@@ -30,10 +30,11 @@ public class Image {
 		super();
 	}
 
-	public Image(byte[] image) {
-		super();
+	public void setImage(String image) {
 		this.image = image;
 	}
+
+
 
 	public Integer getId() {
 		return id;
@@ -42,15 +43,11 @@ public class Image {
 	public void setId(Integer id) {
 		this.id = id;
 	}
-
-	public byte[] getImage() {
+	
+	public String getImage() {
 		return image;
 	}
 
-	public void setImage(byte[] image) {
-		this.image = image;
-	}
-	
 	public Product getProduct() {
 		return product;
 	}

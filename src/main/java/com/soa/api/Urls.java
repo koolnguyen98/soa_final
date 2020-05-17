@@ -12,7 +12,7 @@ public interface Urls {
 	
 	public final String API_SHOP = API + "/shop";
 	
-	public final String API_SHOP_SEARCH = API_SHOP + "/search";
+	public final String API_SHOP_SEARCH = API_SHOP + "/product/search";
 	
 	public final String API_SHOP_FURNITURE = API_SHOP + "/{acronym}";
 
@@ -20,9 +20,9 @@ public interface Urls {
 	
 	public final String API_SHOP_FURNITURE_PRODUCT_ID = API_SHOP_FURNITURE_PRODUCT + "/{id}";
 	
-	public final String API_SHOP_FURNITURE_ID = API_SHOP_FURNITURE + "/{id}";
+	public final String API_SHOP_FURNITURE_ID = API_SHOP_FURNITURE + "product/{id}";
 	
-	public final String API_SHOP_ID = API_SHOP + "/{id}";
+	public final String API_SHOP_ID = API_SHOP + "product/{id}";
 	
 	public final String API_ADMIN = API + "/admin";
 	
@@ -38,7 +38,9 @@ public interface Urls {
 	
 	public final String API_ADMIN_ADD_PRODUCT_TYPE = API_ADMIN + "/addProductType";
 	
-	public final String API_ADMIN_UPDATE_PRODUCT_TYPE = API_ADMIN + "/editProductType/{id}";
+	public final String API_ADMIN_GET_PRODUCT_UPDATE_PRODUCT_TYPE = API_ADMIN + "/editProductType/{id}";
+	
+	public final String API_ADMIN_UPDATE_PRODUCT_TYPE = API_ADMIN + "/editProductType";
 	
 	public final String API_ADMIN_DELETE_PRODUCT_TYPE = API_ADMIN + "/deleteProductType/{id}";
 	
@@ -70,7 +72,7 @@ public interface Urls {
 	
 	public final String API_SHOPPINGCARTS_ADD_PRODUCT = API_SHOPPINGCARTS + "/{id}";
 	
-	public final String API_SHOPPINGCARTS_UPDATE_PRODUCT = API_SHOPPINGCARTS + "update/{id}";
+	public final String API_SHOPPINGCARTS_UPDATE_PRODUCT = API_SHOPPINGCARTS + "/update/{id}";
 	
 	public final String API_SHOPPINGCARTS_ADD_NUMBER_PRODUCT = API_SHOPPINGCARTS + "/{id}/addNumberProduct";
 	

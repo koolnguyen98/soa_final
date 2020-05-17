@@ -55,7 +55,7 @@ public class AdminController {
 	/**
 	 * 
 	 * 
-	 * Book Product 
+	 * Product 
 	 * 
 	 * 
 	 **/
@@ -148,16 +148,16 @@ public class AdminController {
 
 	}
 
-	@RequestMapping(value = Urls.API_ADMIN_UPDATE_PRODUCT_TYPE, method = RequestMethod.GET)
-	public ResponseEntity<?> updateProductTypePage(@PathVariable int id) {
+	@RequestMapping(value = Urls.API_ADMIN_GET_PRODUCT_UPDATE_PRODUCT_TYPE, method = RequestMethod.GET)
+	public ResponseEntity<?> updateProductTypePage(@PathVariable(value = "id") int id) {
 
 		return scurityService.findProductTypeById(id);
 
 	}
 	
 	@RequestMapping(value = Urls.API_ADMIN_UPDATE_PRODUCT_TYPE, method = RequestMethod.POST)
-	public ResponseEntity<?> updateProductType(@ModelAttribute("productTypeForm") @Valid TypeRequest typeRequest, @PathVariable int id) {
-		typeRequest.setId(id);
+	public ResponseEntity<?> updateProductType(@RequestBody TypeRequest typeRequest) {
+		typeRequest.setId(typeRequest.getId());
 		return scurityService.updateProductType(typeRequest);
 
 	}
@@ -191,7 +191,7 @@ public class AdminController {
 	}
 	
 	@RequestMapping(value = Urls.API_ADMIN_UPDATE_FURNITURE_TYPE, method = RequestMethod.POST)
-	public ResponseEntity<?> updateFurnitureType(@ModelAttribute("productTypeForm") @Valid TypeRequest typeRequest, @PathVariable int id) {
+	public ResponseEntity<?> updateFurnitureType(@RequestBody @Valid TypeRequest typeRequest, @PathVariable(value = "id") int id) {
 		typeRequest.setId(id);
 		return scurityService.updateFurnitureType(typeRequest);
 

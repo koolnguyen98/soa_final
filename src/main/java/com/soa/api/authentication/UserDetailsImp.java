@@ -18,22 +18,26 @@ public class UserDetailsImp implements UserDetails {
 	 */
 	private static final long serialVersionUID = -3970499916283530433L;
 	Account account;
-	Role role;
+	List<GrantedAuthority> authorities;
 	
 	@Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
 
-        return Collections.singleton(new SimpleGrantedAuthority("ROLE_USER"));
+        return authorities;
     }
+	
+	 public void setAuthorities(List<GrantedAuthority> authorities)
+	    {
+	        this.authorities=authorities;
+	    }
 	
 	public UserDetailsImp( ) {
 		super();
 	}
 
-    public UserDetailsImp(Account account, Role role) {
+    public UserDetailsImp(Account account) {
 		super();
 		this.account = account;
-		this.role = role;
 	}
 
 	public Account getUser() {
@@ -44,13 +48,7 @@ public class UserDetailsImp implements UserDetails {
 		this.account = account;
 	}
 
-	public Role getRole() {
-		return role;
-	}
-
-	public void setRole(Role role) {
-		this.role = role;
-	}
+	
 
 	@Override
     public String getPassword() {

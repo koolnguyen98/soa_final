@@ -4,7 +4,7 @@ import javax.validation.constraints.NotNull;
 
 public class TypeRequest {
 
-	private Integer id;
+	private int id;
 	
 	@NotNull
 	private String name;
@@ -18,24 +18,11 @@ public class TypeRequest {
 		super();
 	}
 
-	public TypeRequest(Integer id, @NotNull String name, @NotNull String acronym) {
-		super();
-		this.id = id;
-		this.name = name;
-		this.acronym = acronym;
-	}
-
-	public TypeRequest(@NotNull String name, @NotNull String acronym) {
-		super();
-		this.name = name;
-		this.acronym = acronym;
-	}
-
-	public Integer getId() {
+	public int getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 

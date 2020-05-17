@@ -3,12 +3,15 @@ package com.soa.api.controller;
 import java.security.Principal;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
@@ -55,8 +58,8 @@ public class ShoppingController {
 	private UserService userService;
 
 	@PostMapping(value = Urls.API_AUTH)
-	public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
-		return authenticationService.userSigin(loginRequest);
+	public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest, HttpServletRequest request) {
+		return authenticationService.userSigin(loginRequest, request);
 	}
 
 	@GetMapping(value = Urls.API_SHOP)
@@ -106,7 +109,7 @@ public class ShoppingController {
 			
 			apiResponse.setSuccess(false);
 			
-			apiResponse.setMessage("Loại phòng không tồn tại!");
+			apiResponse.setMessage("Furniture does not exist!");
 			
 			apiResponse.setObject(response);
 			
@@ -222,21 +225,21 @@ public class ShoppingController {
 		return ResponseEntity.ok(response);
 	}
 	
-	@RequestMapping(value = "/register", method = RequestMethod.POST)
+	@RequestMapping(value = "api/register", method = RequestMethod.POST)
 	public ResponseEntity<?> register(RedirectAttributes redirectAttrs, @RequestBody @Validated RegisterRequest registerRequest) {
 		
 		return userService.createUser(redirectAttrs, registerRequest);
 	}
 	
-	@RequestMapping(value = "/user/profile", method = RequestMethod.GET)
+	@RequestMapping(value = "api/user/profile", method = RequestMethod.GET)
 	public ResponseEntity<?> userProfile(Model model, Principal principal, RedirectAttributes redirect) {
-		if (principal != null) {
-			User loginedUser = (User) ((Authentication) principal).getPrincipal();
-			
-			System.out.println(loginedUser.toString());
-			
-			return userService.userProfile(model, loginedUser.getUsername(), redirect);
+		
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		if (!(auth instanceof AnonymousAuthenticationToken)) {
+		         UserDetailsImp userDetailsImp = (UserDetailsImp) auth.getPrincipal();
+		         return userService.userProfile(model, userDetailsImp.getUsername(), redirect);
 		}
+		
 		
 		ApiResponse apiResponse = new ApiResponse();
 		
@@ -249,12 +252,12 @@ public class ShoppingController {
 		return new ResponseEntity<Object>(apiResponse, HttpStatus.NOT_FOUND);
 	}
 	
-	@RequestMapping(value = "/user/profile/update", method = RequestMethod.POST)
+	@RequestMapping(value = "api/user/profile/update", method = RequestMethod.POST)
 	public ResponseEntity<?> updateUserProfile(Principal principal, RedirectAttributes redirect, @RequestBody @Validated RegisterRequest registerRequest) {
-		if (principal != null) {
-			User loginedUser = (User) ((Authentication) principal).getPrincipal();
-			
-			return userService.updateUserProfile(redirect, registerRequest);
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		if (!(auth instanceof AnonymousAuthenticationToken)) {
+		         UserDetailsImp userDetailsImp = (UserDetailsImp) auth.getPrincipal();
+		         return userService.updateUserProfile(redirect, registerRequest);
 		}
 		
 		ApiResponse apiResponse = new ApiResponse();

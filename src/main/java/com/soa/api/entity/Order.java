@@ -44,7 +44,7 @@ public class Order {
 	private String address;
 
 	@NotNull
-	@Column(name = "total_price", nullable = false, columnDefinition="Decimal(10,3) default '00.000'")
+	@Column(name = "total_price", nullable = false, columnDefinition="default '00.000'")
 	private double totalPrice;
 	
 	@Enumerated(EnumType.STRING)

@@ -43,8 +43,10 @@ public class UserDetailsServiceImp implements UserDetailsService {
             }
         }
  
-        UserDetails userDetails = (UserDetails) new User(account.getUserName(), //
-        		account.getPassword(), grantList);
+        UserDetailsImp userDetails = new UserDetailsImp();
+        
+        userDetails.setUser(account);
+        userDetails.setAuthorities(grantList);
  
         return userDetails;
 	}
@@ -58,6 +60,21 @@ public class UserDetailsServiceImp implements UserDetailsService {
 					throw new UsernameNotFoundException("User not found with id : " + id);
 				}
 				
-				return new UserDetailsImp(account.get(), account.get().getRoles().get(0));
+				List<Role> roles = account.get().getRoles();
+				 
+		        List<GrantedAuthority> grantList = new ArrayList<GrantedAuthority>();
+		        if (roles != null) {
+		            for (Role role : roles) {
+		                GrantedAuthority authority = new SimpleGrantedAuthority(role.getRole());
+		                grantList.add(authority);
+		            }
+		        }
+		        
+		        UserDetailsImp userDetails = new UserDetailsImp();
+		        
+		        userDetails.setUser(account.get());
+		        userDetails.setAuthorities(grantList);
+				
+				return userDetails;
 	}
 }

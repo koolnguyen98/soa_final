@@ -1,11 +1,15 @@
 package com.soa.api.service;
 
 import java.security.Principal;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.soa.api.authentication.UserDetailsImp;
@@ -112,13 +116,13 @@ public class NonScurityService {
 		String userInfo = "";
 		List<ShoppingCart> shoppingCarts = null;
 		boolean admin = false;
-		if (principal != null) {
-			UserDetailsImp loginedUser = (UserDetailsImp) ((Authentication) principal).getPrincipal();
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		if (!(auth instanceof AnonymousAuthenticationToken)) {
+		         UserDetailsImp loginedUser = (UserDetailsImp) auth.getPrincipal();
 			userInfo = loginedUser.getUsername();
-
-			Role role = loginedUser.getRole();
 		
-			admin = role.getRole().equals("ADMIN") ? true : false;
+			admin = loginedUser.getAuthorities().stream()
+			        	.anyMatch(r -> r.getAuthority().equals("ADMIN"));
 
 			shoppingCarts = findAllShoppingCartByUser(userInfo);
 		}

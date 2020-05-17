@@ -277,8 +277,8 @@ public class OrderService {
 		Order newOrder = new Order(orderRequest.getPaymentMethod(), new Date(), totalPrice, Status.CXN);
 
 		newOrder.setAddress(orderRequest.getStress());
-
-		Date date = new Date();
+		
+		newOrder.setTotalPrice(totalPrice);
 
 		newOrder.setAccount(account);
 
