@@ -19,7 +19,7 @@ import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "product_type", uniqueConstraints={
-		   @UniqueConstraint(columnNames={"name"}),
+		   @UniqueConstraint(columnNames={"name", "furniture_type_id"}),
 		   @UniqueConstraint(columnNames={"acronym"})
 		})
 public class ProductType {
@@ -80,5 +80,12 @@ public class ProductType {
 		this.acronym = acronym;
 	}
 
+	public FurnitureType getFurnitureType() {
+		return furnitureType;
+	}
+
+	public void setFurnitureType(FurnitureType furnitureType) {
+		this.furnitureType = furnitureType;
+	}
 	
 }

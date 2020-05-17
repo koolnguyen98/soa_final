@@ -3,6 +3,8 @@ package com.soa.api.controller.request;
 public class OrderRequest {
 
 	private boolean paymentMethod;
+	
+	private String stress;
 
 	public OrderRequest(boolean paymentMethod) {
 		super();
@@ -19,6 +21,14 @@ public class OrderRequest {
 
 	public void setPaymentMethod(boolean paymentMethod) {
 		this.paymentMethod = paymentMethod;
+	}
+
+	public String getStress() {
+		return stress;
+	}
+
+	public void setStress(String stress) {
+		this.stress = stress;
 	}
 
 }

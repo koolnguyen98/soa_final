@@ -1,15 +1,21 @@
 package com.soa.api.service;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import com.soa.api.authentication.UserDetailsImp;
+import com.soa.api.controller.response.ShopResponse;
 import com.soa.api.entity.Account;
+import com.soa.api.entity.Brand;
 import com.soa.api.entity.FurnitureType;
 import com.soa.api.entity.Product;
 import com.soa.api.entity.ProductType;
+import com.soa.api.entity.Role;
 import com.soa.api.entity.ShoppingCart;
 import com.soa.api.repository.AccountRepository;
 import com.soa.api.repository.BrandRepository;
@@ -50,9 +56,9 @@ public class NonScurityService {
 	public List<FurnitureType> findAllFurnitureType() {
 		return furnitureTypeRepository.findAll();
 	}
-
-	public List<Product> findAllProduct() {
-		return productRepository.findAll();
+	
+	public List<Brand> findAllBrand() {
+		return brandRepository.findAll();
 	}
 
 	public List<Product> findAllProducts() {
@@ -97,5 +103,34 @@ public class NonScurityService {
 		return furnitureType;
 	}
 
+	public List<Product> findProductByName(String textSearch) {
+		List<Product> products = productRepository.findByProductNameSearch(textSearch);
+		return products;
+	}
 	
+	public  ShopResponse generateShopResponse(Principal principal) {
+		String userInfo = "";
+		List<ShoppingCart> shoppingCarts = null;
+		boolean admin = false;
+		if (principal != null) {
+			UserDetailsImp loginedUser = (UserDetailsImp) ((Authentication) principal).getPrincipal();
+			userInfo = loginedUser.getUsername();
+
+			Role role = loginedUser.getRole();
+		
+			admin = role.getRole().equals("ADMIN") ? true : false;
+
+			shoppingCarts = findAllShoppingCartByUser(userInfo);
+		}
+
+		ShopResponse response = new ShopResponse();
+
+		response.setAdmin(admin);
+
+		response.setUserName(userInfo);
+
+		response.setShoppingCarts(shoppingCarts);
+
+		return response;
+	}
 }

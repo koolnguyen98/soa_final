@@ -10,15 +10,23 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.ui.Model;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.soa.api.Urls;
 import com.soa.api.authentication.UserDetailsImp;
 import com.soa.api.controller.request.LoginRequest;
+import com.soa.api.controller.request.RegisterRequest;
 import com.soa.api.controller.response.ApiResponse;
 import com.soa.api.controller.response.ShopResponse;
 import com.soa.api.entity.Account;
@@ -29,6 +37,7 @@ import com.soa.api.entity.ShoppingCart;
 import com.soa.api.service.AuthenticationService;
 import com.soa.api.service.NonScurityService;
 import com.soa.api.service.ScurityService;
+import com.soa.api.service.UserService;
 
 @RestController
 public class ShoppingController {
@@ -41,6 +50,9 @@ public class ShoppingController {
 
 	@Autowired
 	private AuthenticationService authenticationService;
+	
+	@Autowired
+	private UserService userService;
 
 	@PostMapping(value = Urls.API_AUTH)
 	public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
@@ -52,12 +64,28 @@ public class ShoppingController {
 
 		List<FurnitureType> furnitureTypes = nonScurityService.findAllFurnitureType();
 
-		ShopResponse response = this.generateShopResponse(principal);
+		ShopResponse response = nonScurityService.generateShopResponse(principal);
 
 		response.setFurnitureTypes(furnitureTypes);
 		
 		return ResponseEntity.ok(response);
 		
+	}
+	
+	@GetMapping(value = Urls.API_SHOP_SEARCH)
+	public ResponseEntity<?> searchBook(Model model, Principal principal, @RequestParam(value="textSearch") String textSearch) {
+		
+		List<FurnitureType> furnitureTypes = nonScurityService.findAllFurnitureType();
+
+		ShopResponse response = nonScurityService.generateShopResponse(principal);
+		
+		response.setFurnitureTypes(furnitureTypes);
+		
+		List<Product> products = nonScurityService.findProductByName(textSearch);
+		
+		response.setProducts(products);
+
+		return ResponseEntity.ok(response);
 	}
 
 	@GetMapping(value = Urls.API_SHOP_FURNITURE)
@@ -67,7 +95,7 @@ public class ShoppingController {
 
 		FurnitureType furnitureRoom = nonScurityService.findFurnitureTypeByAcronym(acronym);
 
-		ShopResponse response = this.generateShopResponse(principal);
+		ShopResponse response = nonScurityService.generateShopResponse(principal);
 
 		response.setFurnitureTypes(furnitureTypes);
 		
@@ -98,7 +126,7 @@ public class ShoppingController {
 
 		List<Product> products = nonScurityService.findProductsByProductAcronym(acronym, acronymProdcut);
 
-		ShopResponse response = this.generateShopResponse(principal);
+		ShopResponse response = nonScurityService.generateShopResponse(principal);
 
 		response.setFurnitureTypes(furnitureTypes);
 
@@ -133,7 +161,7 @@ public class ShoppingController {
 		return ResponseEntity.ok(response);
 	}
 
-	@GetMapping(value = Urls.API_SHOP_FURNITURE_PRODUCT_ID)
+	@GetMapping(value = {Urls.API_SHOP_FURNITURE_PRODUCT_ID, Urls.API_SHOP_FURNITURE_ID, Urls.API_SHOP_ID})
 	public ResponseEntity<?> furitureProductView(Principal principal, @PathVariable("acronym") String acronym,
 			@PathVariable("acronymProdcut") String acronymProdcut, @PathVariable("id") int id) {
 
@@ -145,7 +173,7 @@ public class ShoppingController {
 
 		Product product = nonScurityService.findByProductId(id);
 
-		ShopResponse response = this.generateShopResponse(principal);
+		ShopResponse response = nonScurityService.generateShopResponse(principal);
 
 		response.setFurnitureTypes(furnitureTypes);
 
@@ -193,31 +221,51 @@ public class ShoppingController {
 		
 		return ResponseEntity.ok(response);
 	}
-
-	private ShopResponse generateShopResponse(Principal principal) {
-		String userInfo = "";
-		List<ShoppingCart> shoppingCarts = null;
-		boolean admin = false;
-		if (principal != null) {
-			UserDetailsImp loginedUser = (UserDetailsImp) ((Authentication) principal).getPrincipal();
-			userInfo = loginedUser.getUsername();
-
-			Role role = loginedUser.getRole();
+	
+	@RequestMapping(value = "/register", method = RequestMethod.POST)
+	public ResponseEntity<?> register(RedirectAttributes redirectAttrs, @RequestBody @Validated RegisterRequest registerRequest) {
 		
-			admin = role.getRole().equals("ADMIN") ? true : false;
-
-			shoppingCarts = nonScurityService.findAllShoppingCartByUser(userInfo);
+		return userService.createUser(redirectAttrs, registerRequest);
+	}
+	
+	@RequestMapping(value = "/user/profile", method = RequestMethod.GET)
+	public ResponseEntity<?> userProfile(Model model, Principal principal, RedirectAttributes redirect) {
+		if (principal != null) {
+			User loginedUser = (User) ((Authentication) principal).getPrincipal();
+			
+			System.out.println(loginedUser.toString());
+			
+			return userService.userProfile(model, loginedUser.getUsername(), redirect);
 		}
-
-		ShopResponse response = new ShopResponse();
-
-		response.setAdmin(admin);
-
-		response.setUserName(userInfo);
-
-		response.setShoppingCarts(shoppingCarts);
-
-		return response;
+		
+		ApiResponse apiResponse = new ApiResponse();
+		
+		apiResponse.setSuccess(false);
+		
+		apiResponse.setMessage("Vui lòng đăng nhập!");
+		
+		apiResponse.setObject(null);
+		
+		return new ResponseEntity<Object>(apiResponse, HttpStatus.NOT_FOUND);
+	}
+	
+	@RequestMapping(value = "/user/profile/update", method = RequestMethod.POST)
+	public ResponseEntity<?> updateUserProfile(Principal principal, RedirectAttributes redirect, @RequestBody @Validated RegisterRequest registerRequest) {
+		if (principal != null) {
+			User loginedUser = (User) ((Authentication) principal).getPrincipal();
+			
+			return userService.updateUserProfile(redirect, registerRequest);
+		}
+		
+		ApiResponse apiResponse = new ApiResponse();
+		
+		apiResponse.setSuccess(false);
+		
+		apiResponse.setMessage("Vui lòng đăng nhập!");
+		
+		apiResponse.setObject(null);
+		
+		return new ResponseEntity<Object>(apiResponse, HttpStatus.NOT_FOUND);
 	}
 
 }

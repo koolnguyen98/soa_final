@@ -10,4 +10,6 @@ public interface FurnitureTypeRepository extends JpaRepository<FurnitureType, In
 
 	FurnitureType findByAcronym(String acronym);
 
+	FurnitureType findByFurnitureName(String name);
+
 }

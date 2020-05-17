@@ -2,28 +2,30 @@ package com.soa.api.controller.request;
 
 import javax.validation.constraints.NotNull;
 
-public class ProductTypeRequest {
+public class TypeRequest {
 
-private Integer id;
+	private Integer id;
 	
 	@NotNull
 	private String name;
 	
 	@NotNull
 	private String acronym;
+	
+	private int furnitureTypeId;
 
-	public ProductTypeRequest() {
+	public TypeRequest() {
 		super();
 	}
 
-	public ProductTypeRequest(Integer id, @NotNull String name, @NotNull String acronym) {
+	public TypeRequest(Integer id, @NotNull String name, @NotNull String acronym) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.acronym = acronym;
 	}
 
-	public ProductTypeRequest(@NotNull String name, @NotNull String acronym) {
+	public TypeRequest(@NotNull String name, @NotNull String acronym) {
 		super();
 		this.name = name;
 		this.acronym = acronym;
@@ -51,6 +53,14 @@ private Integer id;
 
 	public void setAcronym(String acronym) {
 		this.acronym = acronym;
+	}
+
+	public int getFurnitureTypeId() {
+		return furnitureTypeId;
+	}
+
+	public void setFurnitureTypeId(int furnitureTypeId) {
+		this.furnitureTypeId = furnitureTypeId;
 	}
 	
 }

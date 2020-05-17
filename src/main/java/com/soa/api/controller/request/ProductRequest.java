@@ -7,6 +7,9 @@ import javax.validation.constraints.Size;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import com.soa.api.entity.ProductType;
+import com.soa.api.entity.FurnitureType;;
+
 public class ProductRequest {
 
 	private int id;
@@ -32,6 +35,10 @@ public class ProductRequest {
 	private int amount;
 
 	private int productType;
+	
+	private List<ProductType> listProductTypes;
+	
+	private List<FurnitureType> listFurnitureTypes;
 
 	private MultipartFile[] imageFiles;
 
@@ -147,6 +154,22 @@ public class ProductRequest {
 
 	public void setColor(List<Integer> color) {
 		this.color = color;
+	}
+
+	public List<ProductType> getListProductTypes() {
+		return listProductTypes;
+	}
+
+	public void setListProductTypes(List<ProductType> listProductTypes) {
+		this.listProductTypes = listProductTypes;
+	}
+
+	public List<FurnitureType> getListFurnitureTypes() {
+		return listFurnitureTypes;
+	}
+
+	public void setListFurnitureTypes(List<FurnitureType> listFurnitureTypes) {
+		this.listFurnitureTypes = listFurnitureTypes;
 	}
 
 }

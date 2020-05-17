@@ -9,6 +9,8 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -32,22 +34,27 @@ public class Order {
 	@Column(name = "payment_method", nullable = false, columnDefinition="tinyint(1) default 0")
 	private Boolean paymentMethod;
 	
-	@Basic(optional = false)
-	@Column(name = "date_create", insertable = false, updatable = false)
+	@NotNull
+	@Column(name = "date_create")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date dateCreate;
 	
 	@NotNull
+	@Column(name = "address", nullable = false)
+	private String address;
+
+	@NotNull
 	@Column(name = "total_price", nullable = false, columnDefinition="Decimal(10,3) default '00.000'")
 	private double totalPrice;
 	
-	@ManyToOne()
-    @JoinColumn(name="status_id", nullable = false) 
+	@Enumerated(EnumType.STRING)
 	private Status status;
 	
 	@ManyToOne()
     @JoinColumn(name="account_id", nullable = false) 
 	private Account account;
+	
+	
 	
 	@OneToMany(targetEntity=OrderDetail.class, mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<OrderDetail> orderDetails = new ArrayList<OrderDetail>();
@@ -108,6 +115,30 @@ public class Order {
 
 	public void setTotalPrice(double totalPrice) {
 		this.totalPrice = totalPrice;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public List<OrderDetail> getOrderDetails() {
+		return orderDetails;
+	}
+
+	public void setOrderDetails(List<OrderDetail> orderDetails) {
+		this.orderDetails = orderDetails;
+	}
+
+	public Account getAccount() {
+		return account;
+	}
+
+	public void setAccount(Account account) {
+		this.account = account;
 	}
 	
 }

@@ -8,4 +8,8 @@ import com.soa.api.entity.Brand;
 @Repository
 public interface BrandRepository extends JpaRepository<Brand, Integer>  {
 
+	Brand findByBrandName(String name);
+
+	Brand findByIdAndBrandName(Integer id, String name);
+
 }
