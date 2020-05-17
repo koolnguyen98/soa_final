@@ -90,6 +90,7 @@ public class ProductService {
 		product.setDateCreate(new Timestamp(System.currentTimeMillis()));
 		product.setDescription(productRequest.getDescription());
 		product.setDiscount(productRequest.getDiscount());
+		product.setMaterial(productRequest.getMaterial());
 		product.setPrice(productRequest.getPrice());
 		product.setProductName(productRequest.getProductName());
 		product.setProductType(productTypeRepository.findById(productRequest.getProductType()).get());
@@ -104,13 +105,14 @@ public class ProductService {
 				colors.add(color.get());
 			}
 		}
-
+		
+		
 		product.setColors(colors);
 		product.setBrand(brandRepository.findById(productRequest.getBrand()).get());
 
 		Product result = productRepository.save(product);
 
-		if (result != null) {
+		if (result == null) {
 
 			ApiResponse apiResponse = new ApiResponse();
 

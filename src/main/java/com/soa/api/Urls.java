@@ -28,7 +28,7 @@ public interface Urls {
 	
 	public final String API_ADMIN_PRODUCT = API_ADMIN + "/product";
 	
-	public final String API_ADMIN_ADD_PRODUCT = API_ADMIN + "/addProdcut";
+	public final String API_ADMIN_ADD_PRODUCT = API_ADMIN + "/addProduct";
 	
 	public final String API_ADMIN_UPDATE_PRODUCT = API_ADMIN + "/editProduct/{id}";
 	

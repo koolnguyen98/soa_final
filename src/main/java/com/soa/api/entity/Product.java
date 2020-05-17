@@ -2,6 +2,7 @@ package com.soa.api.entity;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -16,6 +17,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -46,15 +49,17 @@ public class Product {
 	@Column(name = "description", nullable = false)
 	private String description;
 	
-	@Column(name = "discount", nullable = false, columnDefinition="Decimal(10,2) default '0.00'")
+	@Column(name = "discount", nullable = false, columnDefinition="default '0.00'")
 	private double discount;
 	
 	@NotNull
 	@Column(name = "price", nullable = false)
 	private double price;
 	
-	@Column(name = "date_create", columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-	private Timestamp dateCreate;
+	@NotNull
+	@Column(name = "date_create")
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date dateCreate;
 	
 	@NotNull
 	@Size(max = 100)
@@ -165,11 +170,11 @@ public class Product {
 		this.price = price;
 	}
 
-	public Timestamp getDateCreate() {
+	public Date getDateCreate() {
 		return dateCreate;
 	}
 
-	public void setDateCreate(Timestamp dateCreate) {
+	public void setDateCreate(Date dateCreate) {
 		this.dateCreate = dateCreate;
 	}
 

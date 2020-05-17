@@ -25,6 +25,10 @@ public class ProductRequest {
 	@NotNull
 	@Size(max = 2000)
 	private String description;
+	
+	@NotNull
+	@Size(max = 2000)
+	private String material;
 
 	private double discount;
 
@@ -172,4 +176,13 @@ public class ProductRequest {
 		this.listFurnitureTypes = listFurnitureTypes;
 	}
 
+	public String getMaterial() {
+		return material;
+	}
+
+	public void setMaterial(String material) {
+		this.material = material;
+	}
+
+	
 }
