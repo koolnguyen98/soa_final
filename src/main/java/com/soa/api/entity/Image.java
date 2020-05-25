@@ -9,6 +9,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "image")
 public class Image {
@@ -47,7 +49,8 @@ public class Image {
 	public String getImage() {
 		return image;
 	}
-
+	
+	@JsonIgnore
 	public Product getProduct() {
 		return product;
 	}
